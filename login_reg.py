@@ -16,7 +16,7 @@ class Login:
     
     self.title_label("Login")
     self.login_pass()
-    self.confirm_button(0)
+    self.confirm_button()
     self.switch_button()
 
 
@@ -39,13 +39,10 @@ class Login:
     self.password_lable=CTkLabel(self.frame,text="Password:",font=("Arial",20,"bold"))
     self.password_lable.place(relx=0.27, y=180, anchor="center")
 
-  def confirm_button(self,x):
-    if x==0:
-      self.confirm_button=CTkButton(self.frame,text="Login",corner_radius=20,width=90,height=45,fg_color="#0097b2",font=("Lexend",18,"bold"))
-      self.confirm_button.place(relx=0.87, y=260, anchor="center")
-    else:
-      self.rconfirm_button=CTkButton(self.frame,text="Create",corner_radius=20,width=90,height=45,fg_color="#0097b2",font=("Lexend",18,"bold"))
-      self.rconfirm_button.place(relx=0.87, y=260, anchor="center")
+  def confirm_button(self):
+    
+    self.confirm_button=CTkButton(self.frame,text="Login",corner_radius=20,width=90,height=45,fg_color="#0097b2",font=("Lexend",18,"bold"))
+    self.confirm_button.place(relx=0.87, y=260, anchor="center")
     
 
   def reg_button(self):
@@ -70,8 +67,11 @@ class Login:
 
     
   def switch_button(self):
-    self.switchbutton=CTkButton(self.frame,text="Create Account",font=("Lexend",18,"bold"),corner_radius=20,height=45,width=80,command=self.switch_reg)
+    self.switchbutton=CTkButton(self.frame,text="Already Account",font=("Lexend",18,"bold"),corner_radius=20,height=45,width=80,command=self.switch_reg)
     self.switchbutton.place(relx=0.21, y=260, anchor="center")
+
+    self.rconfirm_button=CTkButton(self.frame,text="Create",corner_radius=20,width=90,height=45,fg_color="#0097b2",font=("Lexend",18,"bold"))
+    self.rconfirm_button.place(relx=0.87, y=260, anchor="center")
 
 
 
@@ -82,7 +82,6 @@ class Login:
     self.switch_button()
     self.reg_button()
     self.title_label("Register")
-    self.confirm_button(0)
 
 
     
