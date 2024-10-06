@@ -1,30 +1,36 @@
-def colorapply(self, v):
-    if v == "Custom":
-        self.custom_color = CTkEntry(self.color_window)
-        self.custom_color.place(relx=0.1, y=50)
+import customtkinter as ctk
+from tkinter import IntVar
 
-        # Correctly bind the focus events
-        self.custom_color.bind("<FocusOut>", self.set_entry)
-        self.custom_color.bind("<FocusIn>", self.clear_entry)
+class MyApp(ctk.CTk):
+    def __init__(self):
+        super().__init__()
 
-        self.applycustomcolor = CTkButton(self.color_window, text="Apply To Preview")
-        self.applycustomcolor.place(relx=0.1, y=90)
+        self.title("CTkCheckBox Example")
+        self.geometry("300x200")
 
-    else:
-        # Destroy the widgets if they exist
-        try:
-            self.custom_color.destroy()
-            self.applycustomcolor.destroy()
-        except AttributeError:
-            print("No Custom Color to destroy")
+        # IntVar to hold checkbox state
+        self.checkbox_var = IntVar()
 
-# Insert placeholder text if the entry is empty
-def set_entry(self, event=None):  # Add event argument
-    if self.custom_color.get() == "":
-        self.custom_color.insert(0, "Hex Color Code:")
-        print("Placeholder added")
+        # Create CTkCheckBox
+        self.checkbox = ctk.CTkCheckBox(self, text="Check me!", variable=self.checkbox_var, command=self.on_check)
+        self.checkbox.pack(pady=20)
+        self.checkbox2 = ctk.CTkCheckBox(self, text="Check me!", variable=self.checkbox_var, command=self.on_check)
+        self.checkbox2.pack(pady=20)
 
-# Clear the entry when focused
-def clear_entry(self, event=None):  # Add event argument
-    self.custom_color.delete(0, END)
-    print("Entry cleared")
+        # Button to check the state of the checkbox
+        self.button = ctk.CTkButton(self, text="Get CheckBox State", command=self.get_checkbox_state)
+        self.button.pack(pady=20)
+
+    def on_check(self):
+        if self.checkbox_var.get() == 1:
+            print("Checkbox is checked!")
+        else:
+            print("Checkbox is unchecked!")
+
+    def get_checkbox_state(self):
+        state = self.checkbox_var.get()
+        print(f"Checkbox State: {state}")
+
+if __name__ == "__main__":
+    app = MyApp()
+    app.mainloop()
