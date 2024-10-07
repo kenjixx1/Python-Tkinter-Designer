@@ -1,36 +1,38 @@
 import customtkinter as ctk
-from tkinter import IntVar
 
-class MyApp(ctk.CTk):
+class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.geometry("400x400")
+        self.title("Retrieve Font Example")
 
-        self.title("CTkCheckBox Example")
-        self.geometry("300x200")
+        # Create a button with a custom font
+        custom_font = ctk.CTkFont(family="Helvetica", size=18, weight="bold")
+        self.button = ctk.CTkButton(self, text="Button", font=custom_font)
+        self.button.place(x=100, y=100)
 
-        # IntVar to hold checkbox state
-        self.checkbox_var = IntVar()
+        # Fetch the font information
+        self.fetch_font_info(self.button)
 
-        # Create CTkCheckBox
-        self.checkbox = ctk.CTkCheckBox(self, text="Check me!", variable=self.checkbox_var, command=self.on_check)
-        self.checkbox.pack(pady=20)
-        self.checkbox2 = ctk.CTkCheckBox(self, text="Check me!", variable=self.checkbox_var, command=self.on_check)
-        self.checkbox2.pack(pady=20)
+    def fetch_font_info(self, widget):
+        # Get the CTkFont object from the widget
+        font_obj = widget.cget("font")
+        
+        if isinstance(font_obj, ctk.CTkFont):
+            # Extract font family, size, and other properties
+            font_family = font_obj.cget("family")
+            font_size = font_obj.cget("size")
+            font_weight = font_obj.cget("weight")
+            font_slant = font_obj.cget("slant")
 
-        # Button to check the state of the checkbox
-        self.button = ctk.CTkButton(self, text="Get CheckBox State", command=self.get_checkbox_state)
-        self.button.pack(pady=20)
+            print(f"Font Family: {font_family}")
+            print(f"Font Size: {font_size}")
+            print(f"Font Weight: {font_weight}")
+            print(f"Font Slant: {font_slant}")
 
-    def on_check(self):
-        if self.checkbox_var.get() == 1:
-            print("Checkbox is checked!")
         else:
-            print("Checkbox is unchecked!")
+            print("No valid CTkFont found for the widget.")
 
-    def get_checkbox_state(self):
-        state = self.checkbox_var.get()
-        print(f"Checkbox State: {state}")
-
-if __name__ == "__main__":
-    app = MyApp()
-    app.mainloop()
+# Run the application
+app = App()
+app.mainloop()
