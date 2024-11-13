@@ -1,9 +1,9 @@
-#Pause
 from customtkinter import *
 import tkinter as tk
 import tkinter.font as tkFont
 class GeneratorPage:
   def __init__(self, window):
+    self.clipboard=None
     self.window=window
     self.window.title("Gui Generator")
     self.window.geometry("1800x1080")
@@ -21,6 +21,7 @@ class GeneratorPage:
     self.tool_frame = CTkFrame(self.top_frame, fg_color="#5ce1e6", corner_radius=15, height=100)  
 
     self.canvas_frame = CTkFrame(self.window, fg_color="#a6a6a6")
+    self.canvas_frame.bind("<Button-3>",self.show_canvas_properties_menu)
     self.canvas_frame.pack(side="right", fill="both", expand=True, padx=20, pady=20)
     
     self.default_font=CTkFont(family="Helvetica", size=18, weight="bold")
@@ -197,9 +198,13 @@ class GeneratorPage:
     self.sliderl.set(1)
     self.widthlabel.configure(text=f"Width: {int(self.sliderw.get()):02d}")
     self.lenghtlabel.configure(text=f"Lenght: {int(self.sliderl.get()):02d}")
-  def addbutton(self):
-    self.button = CTkButton(self.canvas_frame, text="New-Button", corner_radius=15,bg_color="transparent",fg_color="black",text_color="white",hover_color="blue",border_color="white",font=self.default_font)
-    self.button.place(x=50,y=50)
+  def addbutton(self,properties=None):
+    if properties==None:
+      self.button = CTkButton(self.canvas_frame, text="New-Button", corner_radius=15,bg_color="transparent",fg_color="black",text_color="white",hover_color="blue",border_color="white",font=self.default_font)
+      self.button.place(x=50,y=50)
+    else:
+      self.button = CTkButton(self.canvas_frame, **properties)
+      self.button.place(x=50,y=50)
     self.button.bind("<Button-1>",lambda e,widget=self.button:self.s_drag(e,widget))
     self.button.bind("<B1-Motion>",lambda e,widget=self.button:self.m_drag(e,widget))
     self.button.bind("<ButtonRelease-1>",lambda e,widget=self.button:self.r_drag(e,widget))
@@ -207,9 +212,13 @@ class GeneratorPage:
     self.button.bind("<Button-3>", lambda e,widget=self.button:self.show_properties_menu(e,widget))
     self.storebutton.append(self.button)
     self.slider_start()
-  def addlabel(self):
-    self.newlabel=CTkLabel(self.canvas_frame,fg_color="transparent",text="New-Label",text_color="black",font=self.default_font)
-    self.newlabel.place(x=50,y=50)
+  def addlabel(self,properties=None):
+    if properties==None:
+      self.newlabel=CTkLabel(self.canvas_frame,fg_color="transparent",text="New-Label",text_color="black",font=self.default_font)
+      self.newlabel.place(x=50,y=50)
+    else:
+      self.newlabel=CTkLabel(self.canvas_frame, **properties)
+      self.newlabel.place(x=50,y=50)
     self.newlabel.bind("<Button-1>",lambda e,widget=self.newlabel:self.s_drag(e,widget))
     self.newlabel.bind("<B1-Motion>",lambda e,widget=self.newlabel:self.m_drag(e,widget))
     self.newlabel.bind("<ButtonRelease-1>",lambda e,widget=self.newlabel:self.r_drag(e,widget))
@@ -217,53 +226,77 @@ class GeneratorPage:
     self.newlabel.bind("<Button-3>", lambda e,widget=self.newlabel:self.show_properties_menu(e,widget))
     self.slider_start()
 
-  def addcheckbox(self):
-    self.newcheckbox=CTkCheckBox(self.canvas_frame,text="NewCheckBox",text_color="black",fg_color="red")
-    self.newcheckbox.place(x=50,y=50)
+  def addcheckbox(self,properties=None):
+    if properties==None:
+      self.newcheckbox=CTkCheckBox(self.canvas_frame,text="NewCheckBox",text_color="black",fg_color="red")
+      self.newcheckbox.place(x=50,y=50)
+    else:
+      self.newcheckbox=CTkCheckBox(self.canvas_frame, **properties)
+      self.newcheckbox.place(x=50,y=50)
     self.newcheckbox.bind("<Button-1>",lambda e,widget=self.newcheckbox:self.s_drag(e,widget))
     self.newcheckbox.bind("<B1-Motion>",lambda e,widget=self.newcheckbox:self.m_drag(e,widget))
     self.newcheckbox.bind("<ButtonRelease-1>",lambda e,widget=self.newcheckbox:self.r_drag(e,widget))
     self.newcheckbox.bind("<Double-Button-1>",lambda e,widget=self.newcheckbox:self.apply(e,widget))
     self.newcheckbox.bind("<Button-3>", lambda e,widget=self.newcheckbox:self.show_properties_menu(e,widget))
 
-  def addcombobox(self):
-    self.newcombobox=CTkComboBox(self.canvas_frame,fg_color="black",values=["-"],state="readonly")
-    self.newcombobox.place(x=50,y=50)
+  def addcombobox(self,properties=None):
+    if properties==None:
+      self.newcombobox=CTkComboBox(self.canvas_frame,fg_color="black",values=["-"],state="readonly")
+      self.newcombobox.place(x=50,y=50)
+    else:
+      self.newcombobox=CTkComboBox(self.canvas_frame, **properties)
+      self.newcombobox.place(x=50,y=50)
     self.newcombobox.bind("<Button-1>",lambda e,widget=self.newcombobox:self.s_drag(e,widget))
     self.newcombobox.bind("<B1-Motion>",lambda e,widget=self.newcombobox:self.m_drag(e,widget))
     self.newcombobox.bind("<ButtonRelease-1>",lambda e,widget=self.newcombobox:self.r_drag(e,widget))
     self.newcombobox.bind("<Double-Button-1>",lambda e,widget=self.newcombobox:self.apply(e,widget))
     self.newcombobox.bind("<Button-3>", lambda e,widget=self.newcombobox:self.show_properties_menu(e,widget))
-  def addentry(self):
-    self.newentry=CTkEntry(self.canvas_frame,fg_color="black",text_color="white")
-    self.newentry.place(x=50,y=50)
+  def addentry(self,properties=None):
+    if properties==None:
+      self.newentry=CTkEntry(self.canvas_frame,fg_color="black",text_color="white")
+      self.newentry.place(x=50,y=50)
+    else:
+      self.newentry=CTkEntry(self.canvas_frame, **properties)
+      self.newentry.place(x=50,y=50)
     self.newentry.bind("<Button-1>",lambda e,widget=self.newentry:self.s_drag(e,widget))
     self.newentry.bind("<B1-Motion>",lambda e,widget=self.newentry:self.m_drag(e,widget))
     self.newentry.bind("<ButtonRelease-1>",lambda e,widget=self.newentry:self.r_drag(e,widget))
     self.newentry.bind("<Double-Button-1>",lambda e,widget=self.newentry:self.apply(e,widget))
     self.newentry.bind("<Button-3>", lambda e,widget=self.newentry:self.show_properties_menu(e,widget))
 
-  def addoptionmenu(self):
-    self.newoptionmenu=CTkOptionMenu(self.canvas_frame,fg_color="black",values=["-"],state="readonly",dynamic_resizing=True)
-    self.newoptionmenu.place(x=50,y=50)
+  def addoptionmenu(self,properties=None):
+    if properties==None:
+      self.newoptionmenu=CTkOptionMenu(self.canvas_frame,fg_color="black",values=["-"],state="readonly",dynamic_resizing=True)
+      self.newoptionmenu.place(x=50,y=50)
+    else:
+      self.newoptionmenu=CTkOptionMenu(self.canvas_frame, **properties)
+      self.newoptionmenu.place(x=50,y=50)
     self.newoptionmenu.bind("<Button-1>",lambda e,widget=self.newoptionmenu:self.s_drag(e,widget))
     self.newoptionmenu.bind("<B1-Motion>",lambda e,widget=self.newoptionmenu:self.m_drag(e,widget))
     self.newoptionmenu.bind("<ButtonRelease-1>",lambda e,widget=self.newoptionmenu:self.r_drag(e,widget))
     self.newoptionmenu.bind("<Double-Button-1>",lambda e,widget=self.newoptionmenu:self.apply(e,widget))
     self.newoptionmenu.bind("<Button-3>", lambda e,widget=self.newoptionmenu:self.show_properties_menu(e,widget))
 
-  def addprogressbar(self):
-    self.newprogressbar=CTkProgressBar(self.canvas_frame,fg_color="black")
-    self.newprogressbar.place(x=50,y=50)
+  def addprogressbar(self,properties=None):
+    if properties==None:
+      self.newprogressbar=CTkProgressBar(self.canvas_frame,fg_color="black")
+      self.newprogressbar.place(x=50,y=50)
+    else:
+      self.newprogressbar=CTkProgressBar(self.canvas_frame, **properties)
+      self.newprogressbar.place(x=50,y=50)
     self.newprogressbar.bind("<Button-1>",lambda e,widget=self.newprogressbar:self.s_drag(e,widget))
     self.newprogressbar.bind("<B1-Motion>",lambda e,widget=self.newprogressbar:self.m_drag(e,widget))
     self.newprogressbar.bind("<ButtonRelease-1>",lambda e,widget=self.newprogressbar:self.r_drag(e,widget))
     self.newprogressbar.bind("<Double-Button-1>",lambda e,widget=self.newprogressbar:self.apply(e,widget))
     self.newprogressbar.bind("<Button-3>", lambda e,widget=self.newprogressbar:self.show_properties_menu(e,widget))
 
-  def addradiobutton(self):
-    self.newradiobutton=CTkRadioButton(self.canvas_frame,fg_color="black",text="Option1",text_color="white")
-    self.newradiobutton.place(x=50,y=50)
+  def addradiobutton(self,properties=None):
+    if properties==None:
+      self.newradiobutton=CTkRadioButton(self.canvas_frame,fg_color="black",text="Option1",text_color="white")
+      self.newradiobutton.place(x=50,y=50)
+    else:
+      self.newradiobutton=CTkRadioButton(self.canvas_frame, **properties)
+      self.newradiobutton.place(x=50,y=50)
     self.newradiobutton.bind("<Button-1>",lambda e,widget=self.newradiobutton:self.s_drag(e,widget))
     self.newradiobutton.bind("<B1-Motion>",lambda e,widget=self.newradiobutton:self.m_drag(e,widget))
     self.newradiobutton.bind("<ButtonRelease-1>",lambda e,widget=self.newradiobutton:self.r_drag(e,widget))
@@ -299,6 +332,14 @@ class GeneratorPage:
     if len(self.entry1.get()) != 0:
       widget.configure(text=self.entry1.get())
       self.entry1.delete(0,END)
+    
+
+  def show_canvas_properties_menu(self,e):
+    self.properties_menu = tk.Menu(self.canvas_frame, tearoff=0)
+    self.properties_menu.add_command(label="Properties",command=self.show_properties)
+    self.properties_menu.add_command(label="Paste",command=self.paste)
+    self.properties_menu.add_separator()
+    self.properties_menu.tk_popup(e.x_root, e.y_root)
   def show_properties_menu(self,e,widget):
     self.entry3.configure(state="normal")
     self.entry3.delete(0,END)
@@ -320,16 +361,34 @@ class GeneratorPage:
     self.properties_menu.add_command(label="Delete",command=self.delete_widget)
     self.properties_menu.tk_popup(e.x_root, e.y_root)
   def copy(self):
-    widget_class=type(self.currenton_widget).__name__
+    self.clipboard=self.currenton_widget
     
+  def paste(self):
+    widget_class=type(self.clipboard)
+    properties_list=["text","text_color","fg_color","bg_color","hover_color","corner_radius",
+                     "font","border_width","border_color","width","height","checkbox_width",
+                     "checkbox_height","values","progress_color"]
     properties={
-      "text":self.currenton_widget.cget("text"),
-      "bg":self.currenton_widget.cget("bg_color"),
-      "fg":self.currenton_widget.cget("fg_color"),
-      "font":self.currenton_widget.cget("font"),
-      "borderwidth":self.currenton_widget.cget("border_width"),
     }
-    print(properties)
+    for k in properties_list:
+      try:
+        properties[k]=self.clipboard.cget(k)
+      except:
+        {}
+    if widget_class==CTkButton:
+      self.addbutton(properties)
+    elif widget_class==CTkLabel:
+      self.addlabel(properties)
+    elif widget_class==CTkCheckBox:
+      self.addcheckbox(properties)
+    elif widget_class==CTkComboBox:
+      self.addcombobox(properties)
+    elif widget_class==CTkEntry:
+      self.addentry(properties)
+    elif widget_class==CTkOptionMenu:
+      self.addoptionmenu(properties)
+    elif widget_class==CTkProgressBar:
+      self.addprogressbar(properties)
   def delete_widget(self):
     if self.currenton_widget != None:
       self.currenton_widget.destroy()
@@ -472,8 +531,32 @@ class GeneratorPage:
       self.deletevalue_box=CTkComboBox(self.properties_window,values=self.currenton_widget.cget("values"),command=self.deletevalue_combo)
       self.deletevalue_box.set("Select")
       self.deletevalue_box.grid(row=10,column=1,pady=10,padx=10)
+    if type(self.currenton_widget)==CTkProgressBar:
+      self.color_label=CTkLabel(self.properties_window,text="Progress Color:")
+      self.color_label.grid(row=9,column=0,padx=10,pady=10)
+      self.progrees_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyprogresscolor)
+      self.progrees_color.set("Pick Color")
+      self.progrees_color.grid(row=9,column=1,padx=10,pady=10)
 
-        
+  def applyprogresscolor(self,v):
+    if v=="Custom":
+      self.custom_progress_color=CTkEntry(self.properties_window,text_color="gray")
+      self.custom_progress_color.insert(0, "Hex Color Code:")
+      self.custom_progress_color.grid(row=9,column=2,pady=10,padx=10)
+      self.custom_progress_color.bind("<FocusIn>",lambda e:self.custom_progress_color.delete(0,END))
+      self.applycustom_progress_color_button=CTkButton(self.properties_window,text="Apply",command=self.applycustom_progress_color)
+      self.applycustom_progress_color_button.grid(row=9,column=3,pady=10,padx=10)
+    else:
+      try:
+        self.applycustom_progress_color_button.destroy()
+        self.custom_progress_color.destroy()
+      except:
+        {}
+      color=v.lower()
+      self.currenton_widget.configure(progress_color=color)
+  def applycustom_progress_color(self):
+    self.currenton_widget.configure(progress_color=self.custom_progress_color.get())
+
   def applyvalue_combo(self):
     if self.addvalue_entry.get()!="" and self.addvalue_entry.get()!="Value:":
       val=self.currenton_widget.cget("values")
@@ -505,7 +588,7 @@ class GeneratorPage:
         self.applycustom_border_color_button.destroy()
         self.custom_border_color.destroy()
       except:
-        print("Error")
+        {}
       
       color=v.lower()
       print(color)
@@ -528,7 +611,7 @@ class GeneratorPage:
         self.custom_bg_color.destroy()
         self.applycustom_bg_color_button.destroy()
       except:
-        print("Error")
+        {}
       
       color=self.bg_color.get().lower()
       print(color)
@@ -571,7 +654,7 @@ class GeneratorPage:
         self.custom_color.destroy()
         self.applycustomcolor.destroy()
       except:
-        print("Error")
+        {}
       color=self.widget_color.get().lower()
       self.currenton_widget.configure(fg_color=color)
   def apply_widget_custom_color(self):
@@ -591,7 +674,7 @@ class GeneratorPage:
         self.custom_text_color.destroy()
         self.applycustom_text_color_button.destroy()
       except:
-        print("Error")
+       {}
       color=self.text_color.get().lower()
       self.currenton_widget.configure(text_color=color)
     
@@ -609,7 +692,7 @@ class GeneratorPage:
         self.custom_hovered_color.destroy()
         self.applycustom_hovered_color_button.destroy()
       except:
-        print("Error")
+        {}
       color=self.hovered_color.get().lower()
       self.currenton_widget.configure(hover_color=color)
 
