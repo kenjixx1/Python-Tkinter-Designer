@@ -1,3 +1,4 @@
+#Pause
 from customtkinter import *
 import tkinter as tk
 import tkinter.font as tkFont
