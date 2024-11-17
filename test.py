@@ -1,38 +1,55 @@
-import customtkinter as ctk
+from customtkinter import *
+from tkinter import filedialog
 
-class App(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.geometry("400x400")
-        self.title("Retrieve Font Example")
+class ExportPage:
+    def __init__(self, master):
+        self.master = master
+        self.master.geometry("400x200")
+        self.master.title("Export Page")
 
-        # Create a button with a custom font
-        custom_font = ctk.CTkFont(family="Helvetica", size=18, weight="bold")
-        self.button = ctk.CTkButton(self, text="Button", font=custom_font)
-        self.button.place(x=100, y=100)
+        # Frame for export options
+        self.frame = CTkFrame(self.master)
+        self.frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-        # Fetch the font information
-        self.fetch_font_info(self.button)
-
-    def fetch_font_info(self, widget):
-        # Get the CTkFont object from the widget
-        font_obj = widget.cget("font")
+        # Label and Entry for file name
+        self.label = CTkLabel(self.frame, text="File Name:")
+        self.label.grid(row=0, column=0, padx=10, pady=10)
         
-        if isinstance(font_obj, ctk.CTkFont):
-            # Extract font family, size, and other properties
-            font_family = font_obj.cget("family")
-            font_size = font_obj.cget("size")
-            font_weight = font_obj.cget("weight")
-            font_slant = font_obj.cget("slant")
+        self.file_name_entry = CTkEntry(self.frame, placeholder_text="Enter file name")
+        self.file_name_entry.grid(row=0, column=1, padx=10, pady=10)
 
-            print(f"Font Family: {font_family}")
-            print(f"Font Size: {font_size}")
-            print(f"Font Weight: {font_weight}")
-            print(f"Font Slant: {font_slant}")
+        # Export Button
+        self.export_button = CTkButton(self.frame, text="Export", command=self.export_file)
+        self.export_button.grid(row=1, column=0, columnspan=2, pady=20)
 
-        else:
-            print("No valid CTkFont found for the widget.")
+    def export_file(self):
+        # Get the entered file name
+        file_name = self.file_name_entry.get()
+        if not file_name:
+            CTkLabel(self.frame, text="Please enter a file name!", text_color="red").grid(row=2, column=0, columnspan=2)
+            return
 
-# Run the application
-app = App()
-app.mainloop()
+        # Open save file dialog
+        file_path = filedialog.asksaveasfilename(
+            title="Select Export Location",
+            initialfile=file_name,
+            defaultextension=".py",
+            filetypes=(("Python Files", "*.py"), ("All Files", "*.*"))
+        )
+
+        if file_path:  # If a path is selected
+            self.save_file(file_path)
+
+    def save_file(self, file_path):
+        # Simulate saving file (replace this with your export logic)
+        with open(file_path, "w") as file:
+            file.write("# Exported content goes here\n")
+            file.write("print('Hello, World!')\n")
+
+        CTkLabel(self.frame, text=f"File saved to {file_path}", text_color="green").grid(row=3, column=0, columnspan=2)
+
+# Main Application
+if __name__ == "__main__":
+    root = CTk()
+    app = ExportPage(root)
+    root.mainloop()
