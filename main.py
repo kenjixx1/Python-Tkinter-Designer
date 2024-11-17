@@ -276,7 +276,7 @@ class GeneratorPage:
     self.export_button=CTkButton(self.menu_frame,text="Export",corner_radius=25,width=5,fg_color="#0097b2",command=self.show_export_menu)
     self.export_button.grid(row=0,column=0,padx=5,pady=5)
 
-    self.make_new_button=CTkButton(self.menu_frame,text="New",corner_radius=25,width=5,fg_color="#5ca16c")
+    self.make_new_button=CTkButton(self.menu_frame,text="New",corner_radius=25,width=5,fg_color="#5ca16c",command=self.new)
     self.make_new_button.grid(row=0,column=1,padx=5,pady=5)
 
     self.save_button=CTkButton(self.menu_frame,text="Delete",corner_radius=25,width=5,fg_color="#ffbe5c",command=self.delete_widget)
@@ -287,6 +287,9 @@ class GeneratorPage:
     self.allsidebuttons.append(self.export_button)
     self.allsidebuttons.append(self.make_new_button)
     self.allsidebuttons.append(self.save_button)
+  def new(self):
+    for widget in self.canvas_frame.winfo_children():
+      widget.destroy()
 
   def show_export_menu(self):
     self.export_window = CTkToplevel(self.window)
