@@ -2,11 +2,11 @@ from customtkinter import *
 import tkinter as tk
 import tkinter.font as tkFont
 from export import export
-import colorpicker 
+from colorpicker import ColorPick
 from tkinter import filedialog
-class GeneratorPage:
+class GeneratorPage(ColorPick):
   def __init__(self, window):
-    
+    super().__init__()
     self.magnet=IntVar()
     self.clipboard=None
     self.window=window
@@ -50,9 +50,6 @@ class GeneratorPage:
     self.canvas_frame = CTkFrame(self.window, fg_color="#fcf6e1",width=1600, height=1000)
     self.canvas_frame.bind("<Button-3>",self.show_canvas_properties_menu)
     self.canvas_frame.pack(side="right", expand=True, padx=20, pady=20)
-
-   
-
 
 
     self.window.bind("<Control-c>",self.copy)
@@ -389,7 +386,7 @@ class GeneratorPage:
     self.sidebar_button_13 = CTkButton(self.sidebar_frame, text="Switch", corner_radius=15,height=50,command=self.addswitch,fg_color=self.sidebar_button_color,text_color=self.sidebar_button_text_color,hover_color=self.sidebar_button_hover_color)
     self.sidebar_button_13.pack(pady=10, padx=20)
 
-    self.sidebar_button_14 = CTkButton(self.sidebar_frame, text="Color Finder", corner_radius=15,height=50,command=colorpicker.pickcolor,fg_color=self.sidebar_button_color,text_color=self.sidebar_button_text_color,hover_color=self.sidebar_button_hover_color)
+    self.sidebar_button_14 = CTkButton(self.sidebar_frame, text="Color Finder", corner_radius=15,height=50,command=self.run,fg_color=self.sidebar_button_color,text_color=self.sidebar_button_text_color,hover_color=self.sidebar_button_hover_color)
     self.sidebar_button_14.pack(pady=10, padx=20)
 
     
@@ -676,7 +673,7 @@ class GeneratorPage:
     self.properties_menu = tk.Menu(self.window, tearoff=0)
     self.properties_menu.add_command(label="Properties",command=self.show_properties)
     self.properties_menu.add_command(label="Paste",command=self.paste)
-    self.properties_menu.add_command(label="Color Finder",command=colorpicker.pickcolor)
+    self.properties_menu.add_command(label="Color Finder",command=self.run)
     self.properties_menu.add_separator()
     self.properties_menu.tk_popup(e.x_root, e.y_root)
     
