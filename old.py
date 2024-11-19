@@ -4,200 +4,7 @@ import tkinter.font as tkFont
 from export import export
 from colorpicker import ColorPick
 from tkinter import filedialog
-
-class Properties:
-  def __init__(self):
-    pass
-  def show_properties(self):
-    self.properties_window = CTkToplevel(self.window)
-    self.properties_window.attributes("-topmost",True)
-    self.properties_window.geometry("700x550")
-    self.properties_window.title("Properties")
-
-    self.widget_color_label=CTkLabel(self.properties_window,text="Widget Color:")
-    self.widget_color_label.grid(row=1,column=0,padx=10,pady=10)
-    try:
-      if type(self.currenton_widget.cget("fg_color"))==str:
-        self.widget_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applywidgetcolor)
-        self.widget_color.set(self.currenton_widget.cget("fg_color").capitalize())
-        self.widget_color.grid(row=1,column=1,pady=10,padx=10)
-      else:
-        self.widget_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applywidgetcolor)
-        self.widget_color.set("Default")
-        self.widget_color.grid(row=1,column=1,pady=10,padx=10)
-    except:
-      print("Not Here")
-      print(self.currenton_widget.cget("fg_color"))
-      self.widget_color=CTkLabel(self.properties_window,text="Disabled")
-      self.widget_color.grid(row=1,column=1,padx=10,pady=10)
-    try:
-      self.currenton_widget.cget("text")
-      self.widget_text=CTkLabel(self.properties_window,text="Text:")
-      self.widget_text.grid(row=0,column=0,pady=10,padx=10)
-      self.widget_text_entry=CTkEntry(self.properties_window)
-      self.widget_text_entry.grid(row=0,column=1)
-      self.widget_text_entry.insert(0,self.currenton_widget.cget("text"))
-      self.widget_text_entry.bind("<FocusIn>",lambda e:self.widget_text_entry.delete(0,END))
-      self.widget_text_entry.bind("<Return>",self.apply_widget_text)
-    except:{}
-
-    self.text_color_label=CTkLabel(self.properties_window,text="Text Color:")
-    self.text_color_label.grid(row=2,column=0,padx=10,pady=10)
-    try:
-      self.text_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applytextcolor)
-      self.text_color.set(self.currenton_widget.cget("text_color").capitalize())
-      self.text_color.grid(row=2,column=1,pady=10,padx=10)
-    except:
-      self.text_color=CTkLabel(self.properties_window,text="Disabled")
-      self.text_color.grid(row=2,column=1,padx=10,pady=10)
-
-    self.hovered_color_label=CTkLabel(self.properties_window,text="Hovered Color:")
-    self.hovered_color_label.grid(row=3,column=0,padx=10,pady=10)
-    try:
-      if type(self.currenton_widget.cget("hover_color"))==str:
-        self.hovered_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyhovercolor)
-        self.hovered_color.set(self.currenton_widget.cget("hover_color").capitalize())
-        self.hovered_color.grid(row=3,column=1,pady=10,padx=10)
-      elif type(self.currenton_widget.cget("hover_color"))==list:
-        self.hovered_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyhovercolor)
-        self.hovered_color.set("Default")
-        self.hovered_color.grid(row=3,column=1,pady=10,padx=10)
-    except:
-      self.hovered_color=CTkLabel(self.properties_window,text="Disabled")
-      self.hovered_color.grid(row=3,column=1,padx=0,pady=10)
-
-    self.corner_radius_label=CTkLabel(self.properties_window,text="Corner Radius:")
-    self.corner_radius_label.grid(row=4,column=0,padx=10,pady=10)
-    try:
-      self.corner_radius = CTkSlider(self.properties_window, from_=1, to=100, width=150,command=self.applycornerradius)
-      self.corner_radius.grid(row=4, column=1, padx=10, pady=10)
-      self.corner_radius.set(self.currenton_widget.cget("corner_radius"))
-    except:
-      self.corner_radius=CTkLabel(self.properties_window,text="Disabled")
-      self.corner_radius.grid(row=4,column=1,padx=0,pady=10)
-    try:
-
-      font = self.currenton_widget.cget("font")
-      size = font.cget("size")
-      family = font.cget("family")
-      
-
-
-      self.font_label=CTkLabel(self.properties_window,text="Font")
-      self.font_label.grid(row=5,column=0,padx=10,pady=10)
-      self.font=CTkComboBox(self.properties_window,values=["Arial","Times New Roman","Helvetica","Courier New","Verdana ","Georgia ","Comic Sans MS","Tahoma","Lucida Grande"],command=self.changefont)
-      self.font.grid(row=5,column=1,padx=10,pady=10)
-      self.font.set(family.capitalize())
-
-      self.font_size_label=CTkLabel(self.properties_window,text="Font")
-      self.font_size_label.grid(row=5,column=2,padx=10,pady=10)
-      self.font_size=CTkComboBox(self.properties_window,values=["2","4","8","12","14","16 ","18","24","32","64","128","256"],command=self.changefont)
-      self.font_size.grid(row=5,column=3,padx=10,pady=10)
-      self.font_size.set(size)
-
-      self.font_style_label=CTkLabel(self.properties_window,text="Style")
-      self.font_style_label.grid(row=5,column=4,padx=10,pady=10)
-      self.font_style=CTkComboBox(self.properties_window,values=["Normal","Bold","Italic","Underline"],command=self.changefont)
-      self.font_style.set(font.cget("weight").capitalize())
-      self.font_style.grid(row=5,column=5,padx=10,pady=10)
-    except:{}
-
-    self.bg_color_lable=CTkLabel(self.properties_window,text="Background Color:")
-    self.bg_color_lable.grid(row=6,column=0,padx=10,pady=10)
-    try:
-      self.bg_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applybgcolor)
-      self.bg_color.set("Transparent")
-      self.bg_color.grid(row=6,column=1,pady=10,padx=10)
-    except:
-      self.bg_color=CTkLabel(self.properties_window,text="Transparent")
-      self.bg_color.grid(row=6,column=1,padx=10,pady=10)
-
-    self.border_width_label=CTkLabel(self.properties_window,text="Border Thickness")
-    self.border_width_label.grid(row=7,column=0,padx=10,pady=10)
-
-    try:
-      self.border_width = CTkSlider(self.properties_window, from_=0, to=25, width=150,command=self.applyborderwidth)
-      self.border_width.grid(row=7, column=1, padx=10, pady=10)
-      self.border_width.set(self.currenton_widget.cget("border_width"))
-      
-    except:
-      self.border_width=CTkLabel(self.properties_window,text="Disabled")
-      self.border_width.grid(row=7,column=1,padx=0,pady=10)
-
-    self.border_color_label=CTkLabel(self.properties_window,text="Border Color")
-    self.border_color_label.grid(row=8,column=0,padx=10,pady=10)
-    try:
-      self.border_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applybordercolor)
-      self.border_color.set("Transparent")
-      self.border_color.grid(row=8,column=1,pady=10,padx=10)
-    except:
-      self.border_color=CTkLabel(self.properties_window,text="Transparent")
-      self.border_color.grid(row=8,column=1,padx=10,pady=10)
-    if type(self.currenton_widget)==CTkComboBox or type(self.currenton_widget)==CTkOptionMenu:
-      self.addvalue_lable=CTkLabel(self.properties_window,text="Add Value:")
-      self.addvalue_lable.grid(row=9,column=0,padx=10,pady=10)
-      self.addvalue_entry=CTkEntry(self.properties_window,text_color="gray")
-      self.addvalue_entry.insert(0, "Value:")
-      self.addvalue_entry.grid(row=9,column=1,pady=10,padx=10)
-      self.addvalue_entry.bind("<FocusIn>",lambda e:self.addvalue_entry.delete(0,END))
-      self.applyaddvalue_combo=CTkButton(self.properties_window,text="Apply",command=self.applyvalue_combo,width=50)
-      self.applyaddvalue_combo.grid(row=9,column=2,pady=10,padx=10)
-
-      self.deletevalue_lable=CTkLabel(self.properties_window,text="Delete Value:")
-      self.deletevalue_lable.grid(row=10,column=0,padx=10,pady=10)
-      self.deletevalue_box=CTkComboBox(self.properties_window,values=self.currenton_widget.cget("values"),command=self.deletevalue_combo)
-      self.deletevalue_box.set("Select")
-      self.deletevalue_box.grid(row=10,column=1,pady=10,padx=10)
-    if type(self.currenton_widget)==CTkProgressBar or type(self.currenton_widget)==CTkSlider or type(self.currenton_widget)==CTkSwitch:
-      self.color_label=CTkLabel(self.properties_window,text="Progress Color:")
-      self.color_label.grid(row=9,column=0,padx=10,pady=10)
-      self.progrees_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyprogresscolor)
-      self.progrees_color.set("Pick Color")
-      self.progrees_color.grid(row=9,column=1,padx=10,pady=10)
-
-
-class CopyPaste:
-  def __init__(self):
-    pass
-  def copy(self,_=None):
-    self.clipboard=self.currenton_widget
-    
-  def paste(self,e=None,master=None):
-    widget_class=type(self.clipboard)
-    properties_list=["text","text_color","fg_color","bg_color","hover_color","corner_radius",
-                     "font","border_width","border_color","width","height","checkbox_width",
-                     "checkbox_height","values","progress_color"]
-    properties={
-    }
-    for k in properties_list:
-      try:
-        properties[k]=self.clipboard.cget(k)
-      except:
-        {}
-    if widget_class==CTkButton:
-      self.addbutton(properties,master=master)
-    elif widget_class==CTkLabel:
-      self.addlabel(properties,master=master)
-    elif widget_class==CTkCheckBox:
-      self.addcheckbox(properties,master=master)
-    elif widget_class==CTkComboBox:
-      self.addcombobox(properties,master=master)
-    elif widget_class==CTkEntry:
-      self.addentry(properties,master=master)
-    elif widget_class==CTkOptionMenu:
-      self.addoptionmenu(properties,master=master)
-    elif widget_class==CTkProgressBar:
-      self.addprogressbar(properties,master=master)
-    elif widget_class==CTkFrame:
-      self.addframe(properties,master=master)
-    elif widget_class==CTkSwitch:
-      self.addswitch(properties,master=master)
-    elif widget_class==CTkSlider:
-      self.addslider(properties,master=master)
-    elif widget_class==CTkRadioButton:
-      self.addradiobutton(properties,master=master)
-
-class GeneratorPage(ColorPick,Properties,CopyPaste):
+class GeneratorPage(ColorPick):
   def __init__(self, window):
     super().__init__()
     self.magnet=IntVar()
@@ -220,7 +27,6 @@ class GeneratorPage(ColorPick,Properties,CopyPaste):
 
     self.window.configure(fg_color=self.window_color)
 
-    #Collection Of Widget
     self.allsidebuttons=[]
     self.menulist=[]
     self.alltopfrape=[]
@@ -229,14 +35,13 @@ class GeneratorPage(ColorPick,Properties,CopyPaste):
     self.allentry=[]
     self.segmentedbutton=None
 
-
-
     self.top_frame = CTkFrame(self.window, fg_color="transparent", corner_radius=15, height=100)
     self.top_frame.pack(fill="x", pady=10)
 
     self.sidebar_frame = CTkFrame(self.window, width=200, corner_radius=15, fg_color=self.sidebar_frame_color)
     self.sidebar_frame.pack(side="left", fill="y", padx=20, pady=10)
 
+    
     
     self.menu_frame=CTkFrame(self.top_frame,fg_color="transparent",corner_radius=20)
     self.tool_frame = CTkFrame(self.top_frame, fg_color=self.top_frame_color, corner_radius=15, height=100)  
@@ -905,10 +710,194 @@ class GeneratorPage(ColorPick,Properties,CopyPaste):
     self.currenton_widget.bind("<B1-Motion>",lambda e,widget=self.currenton_widget:self.m_drag(e,widget))
     self.currenton_widget.bind("<ButtonRelease-1>",lambda e,widget=self.currenton_widget:self.r_drag(e,widget))
 
-  
+  def copy(self,_=None):
+    self.clipboard=self.currenton_widget
+    
+  def paste(self,e=None,master=None):
+    widget_class=type(self.clipboard)
+    properties_list=["text","text_color","fg_color","bg_color","hover_color","corner_radius",
+                     "font","border_width","border_color","width","height","checkbox_width",
+                     "checkbox_height","values","progress_color"]
+    properties={
+    }
+    for k in properties_list:
+      try:
+        properties[k]=self.clipboard.cget(k)
+      except:
+        {}
+    if widget_class==CTkButton:
+      self.addbutton(properties,master=master)
+    elif widget_class==CTkLabel:
+      self.addlabel(properties,master=master)
+    elif widget_class==CTkCheckBox:
+      self.addcheckbox(properties,master=master)
+    elif widget_class==CTkComboBox:
+      self.addcombobox(properties,master=master)
+    elif widget_class==CTkEntry:
+      self.addentry(properties,master=master)
+    elif widget_class==CTkOptionMenu:
+      self.addoptionmenu(properties,master=master)
+    elif widget_class==CTkProgressBar:
+      self.addprogressbar(properties,master=master)
+    elif widget_class==CTkFrame:
+      self.addframe(properties,master=master)
+    elif widget_class==CTkSwitch:
+      self.addswitch(properties,master=master)
+    elif widget_class==CTkSlider:
+      self.addslider(properties,master=master)
+    elif widget_class==CTkRadioButton:
+      self.addradiobutton(properties,master=master)
   def delete_widget(self,_=None):
     if self.currenton_widget != None:
       self.currenton_widget.destroy()
+
+  def show_properties(self):
+    self.properties_window = CTkToplevel(self.window)
+    self.properties_window.attributes("-topmost",True)
+    self.properties_window.geometry("700x550")
+    self.properties_window.title("Properties")
+
+    self.widget_color_label=CTkLabel(self.properties_window,text="Widget Color:")
+    self.widget_color_label.grid(row=1,column=0,padx=10,pady=10)
+    try:
+      if type(self.currenton_widget.cget("fg_color"))==str:
+        self.widget_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applywidgetcolor)
+        self.widget_color.set(self.currenton_widget.cget("fg_color").capitalize())
+        self.widget_color.grid(row=1,column=1,pady=10,padx=10)
+      else:
+        self.widget_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applywidgetcolor)
+        self.widget_color.set("Default")
+        self.widget_color.grid(row=1,column=1,pady=10,padx=10)
+    except:
+      print("Not Here")
+      print(self.currenton_widget.cget("fg_color"))
+      self.widget_color=CTkLabel(self.properties_window,text="Disabled")
+      self.widget_color.grid(row=1,column=1,padx=10,pady=10)
+    try:
+      self.currenton_widget.cget("text")
+      self.widget_text=CTkLabel(self.properties_window,text="Text:")
+      self.widget_text.grid(row=0,column=0,pady=10,padx=10)
+      self.widget_text_entry=CTkEntry(self.properties_window)
+      self.widget_text_entry.grid(row=0,column=1)
+      self.widget_text_entry.insert(0,self.currenton_widget.cget("text"))
+      self.widget_text_entry.bind("<FocusIn>",lambda e:self.widget_text_entry.delete(0,END))
+      self.widget_text_entry.bind("<Return>",self.apply_widget_text)
+    except:{}
+
+    self.text_color_label=CTkLabel(self.properties_window,text="Text Color:")
+    self.text_color_label.grid(row=2,column=0,padx=10,pady=10)
+    try:
+      self.text_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applytextcolor)
+      self.text_color.set(self.currenton_widget.cget("text_color").capitalize())
+      self.text_color.grid(row=2,column=1,pady=10,padx=10)
+    except:
+      self.text_color=CTkLabel(self.properties_window,text="Disabled")
+      self.text_color.grid(row=2,column=1,padx=10,pady=10)
+
+    self.hovered_color_label=CTkLabel(self.properties_window,text="Hovered Color:")
+    self.hovered_color_label.grid(row=3,column=0,padx=10,pady=10)
+    try:
+      if type(self.currenton_widget.cget("hover_color"))==str:
+        self.hovered_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyhovercolor)
+        self.hovered_color.set(self.currenton_widget.cget("hover_color").capitalize())
+        self.hovered_color.grid(row=3,column=1,pady=10,padx=10)
+      elif type(self.currenton_widget.cget("hover_color"))==list:
+        self.hovered_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyhovercolor)
+        self.hovered_color.set("Default")
+        self.hovered_color.grid(row=3,column=1,pady=10,padx=10)
+    except:
+      self.hovered_color=CTkLabel(self.properties_window,text="Disabled")
+      self.hovered_color.grid(row=3,column=1,padx=0,pady=10)
+
+    self.corner_radius_label=CTkLabel(self.properties_window,text="Corner Radius:")
+    self.corner_radius_label.grid(row=4,column=0,padx=10,pady=10)
+    try:
+      self.corner_radius = CTkSlider(self.properties_window, from_=1, to=100, width=150,command=self.applycornerradius)
+      self.corner_radius.grid(row=4, column=1, padx=10, pady=10)
+      self.corner_radius.set(self.currenton_widget.cget("corner_radius"))
+    except:
+      self.corner_radius=CTkLabel(self.properties_window,text="Disabled")
+      self.corner_radius.grid(row=4,column=1,padx=0,pady=10)
+    try:
+
+      font = self.currenton_widget.cget("font")
+      size = font.cget("size")
+      family = font.cget("family")
+      
+
+
+      self.font_label=CTkLabel(self.properties_window,text="Font")
+      self.font_label.grid(row=5,column=0,padx=10,pady=10)
+      self.font=CTkComboBox(self.properties_window,values=["Arial","Times New Roman","Helvetica","Courier New","Verdana ","Georgia ","Comic Sans MS","Tahoma","Lucida Grande"],command=self.changefont)
+      self.font.grid(row=5,column=1,padx=10,pady=10)
+      self.font.set(family.capitalize())
+
+      self.font_size_label=CTkLabel(self.properties_window,text="Font")
+      self.font_size_label.grid(row=5,column=2,padx=10,pady=10)
+      self.font_size=CTkComboBox(self.properties_window,values=["2","4","8","12","14","16 ","18","24","32","64","128","256"],command=self.changefont)
+      self.font_size.grid(row=5,column=3,padx=10,pady=10)
+      self.font_size.set(size)
+
+      self.font_style_label=CTkLabel(self.properties_window,text="Style")
+      self.font_style_label.grid(row=5,column=4,padx=10,pady=10)
+      self.font_style=CTkComboBox(self.properties_window,values=["Normal","Bold","Italic","Underline"],command=self.changefont)
+      self.font_style.set(font.cget("weight").capitalize())
+      self.font_style.grid(row=5,column=5,padx=10,pady=10)
+    except:{}
+
+    self.bg_color_lable=CTkLabel(self.properties_window,text="Background Color:")
+    self.bg_color_lable.grid(row=6,column=0,padx=10,pady=10)
+    try:
+      self.bg_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applybgcolor)
+      self.bg_color.set("Transparent")
+      self.bg_color.grid(row=6,column=1,pady=10,padx=10)
+    except:
+      self.bg_color=CTkLabel(self.properties_window,text="Transparent")
+      self.bg_color.grid(row=6,column=1,padx=10,pady=10)
+
+    self.border_width_label=CTkLabel(self.properties_window,text="Border Thickness")
+    self.border_width_label.grid(row=7,column=0,padx=10,pady=10)
+
+    try:
+      self.border_width = CTkSlider(self.properties_window, from_=0, to=25, width=150,command=self.applyborderwidth)
+      self.border_width.grid(row=7, column=1, padx=10, pady=10)
+      self.border_width.set(self.currenton_widget.cget("border_width"))
+      
+    except:
+      self.border_width=CTkLabel(self.properties_window,text="Disabled")
+      self.border_width.grid(row=7,column=1,padx=0,pady=10)
+
+    self.border_color_label=CTkLabel(self.properties_window,text="Border Color")
+    self.border_color_label.grid(row=8,column=0,padx=10,pady=10)
+    try:
+      self.border_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applybordercolor)
+      self.border_color.set("Transparent")
+      self.border_color.grid(row=8,column=1,pady=10,padx=10)
+    except:
+      self.border_color=CTkLabel(self.properties_window,text="Transparent")
+      self.border_color.grid(row=8,column=1,padx=10,pady=10)
+    if type(self.currenton_widget)==CTkComboBox or type(self.currenton_widget)==CTkOptionMenu:
+      self.addvalue_lable=CTkLabel(self.properties_window,text="Add Value:")
+      self.addvalue_lable.grid(row=9,column=0,padx=10,pady=10)
+      self.addvalue_entry=CTkEntry(self.properties_window,text_color="gray")
+      self.addvalue_entry.insert(0, "Value:")
+      self.addvalue_entry.grid(row=9,column=1,pady=10,padx=10)
+      self.addvalue_entry.bind("<FocusIn>",lambda e:self.addvalue_entry.delete(0,END))
+      self.applyaddvalue_combo=CTkButton(self.properties_window,text="Apply",command=self.applyvalue_combo,width=50)
+      self.applyaddvalue_combo.grid(row=9,column=2,pady=10,padx=10)
+
+      self.deletevalue_lable=CTkLabel(self.properties_window,text="Delete Value:")
+      self.deletevalue_lable.grid(row=10,column=0,padx=10,pady=10)
+      self.deletevalue_box=CTkComboBox(self.properties_window,values=self.currenton_widget.cget("values"),command=self.deletevalue_combo)
+      self.deletevalue_box.set("Select")
+      self.deletevalue_box.grid(row=10,column=1,pady=10,padx=10)
+    if type(self.currenton_widget)==CTkProgressBar or type(self.currenton_widget)==CTkSlider or type(self.currenton_widget)==CTkSwitch:
+      self.color_label=CTkLabel(self.properties_window,text="Progress Color:")
+      self.color_label.grid(row=9,column=0,padx=10,pady=10)
+      self.progrees_color=CTkComboBox(self.properties_window,values=["Gray","White","Black","Blue","Red","Green","Yellow","Purple","Pink","---------------------","Transparent","Custom"],command=self.applyprogresscolor)
+      self.progrees_color.set("Pick Color")
+      self.progrees_color.grid(row=9,column=1,padx=10,pady=10)
+
 
     #Export Issue
 
@@ -1100,10 +1089,6 @@ class GeneratorPage(ColorPick,Properties,CopyPaste):
 
   def applycustom_hover_color(self):
     self.currenton_widget.configure(hover_color=self.custom_hovered_color.get())
-
-
-
-
 
 set_appearance_mode("dark")  
 set_default_color_theme("blue")  

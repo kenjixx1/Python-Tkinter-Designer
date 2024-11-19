@@ -3,7 +3,11 @@ import tkinter
 from tkinter import filedialog
 
 
+255
 
+
+
+#00 ff 00
 
 def export(frame,path):
     print('Exporting...')
